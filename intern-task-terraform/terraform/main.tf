@@ -1,4 +1,3 @@
-cat > main.tf <<'EOF'
 terraform {
   required_version = ">= 1.5.0"
 
@@ -22,9 +21,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags = {
-    Name = "intern-task-vpc"
-  }
+  tags = { Name = "intern-task-vpc" }
 }
 
 resource "aws_internet_gateway" "main" {
@@ -36,9 +33,7 @@ resource "aws_subnet" "public" {
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 
-  tags = {
-    Name = "intern-task-public-subnet"
-  }
+  tags = { Name = "intern-task-public-subnet" }
 }
 
 resource "aws_route_table" "public" {
@@ -57,7 +52,7 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_security_group" "app" {
   name        = "intern-task-app-sg"
-  description = "Restricted SSH and application access"
+  description = "Application access with restricted SSH"
   vpc_id      = aws_vpc.main.id
 
   ingress {
@@ -83,9 +78,7 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "intern-task-app-sg"
-  }
+  tags = { Name = "intern-task-app-sg" }
 }
 
 resource "aws_instance" "app" {
@@ -103,8 +96,5 @@ resource "aws_instance" "app" {
 
   user_data_replace_on_change = false
 
-  tags = {
-    Name = "intern-task-app"
-  }
+  tags = { Name = "intern-task-app" }
 }
-EOF

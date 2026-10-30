@@ -1,12 +1,11 @@
-cat > variables.tf <<'EOF'
 variable "aws_region" {
-  description = "AWS deployment region"
+  description = "AWS region"
   type        = string
   default     = "us-east-1"
 }
 
 variable "ami_id" {
-  description = "Amazon Linux 2023 AMI ID"
+  description = "Amazon Linux EC2 AMI ID"
   type        = string
   default     = "ami-0c02fb55956c7d316"
 }
@@ -23,7 +22,7 @@ variable "ssh_cidr" {
 
   validation {
     condition     = can(cidrnetmask(var.ssh_cidr))
-    error_message = "Provide a valid SSH CIDR."
+    error_message = "Provide a valid CIDR."
   }
 }
 
@@ -34,13 +33,12 @@ variable "app_port" {
 }
 
 variable "git_repo_url" {
-  description = "Public GitHub repository URL"
+  description = "Public GitHub fork URL"
   type        = string
 }
 
 variable "git_branch" {
-  description = "Git branch containing the application"
+  description = "Application source branch"
   type        = string
   default     = "solution/anjan-prajapati"
 }
-EOF
