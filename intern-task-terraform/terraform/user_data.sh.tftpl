@@ -1,15 +1,27 @@
-cat > user_data.sh.tftpl <<'EOF'
 #!/bin/bash
 set -euxo pipefail
 
 dnf update -y
-dnf install -y docker git
+dnf install -y docker firewalld git
 
-id intern || useradd -m -s /bin/bash intern
+if ! id intern >/dev/null 2>&1; then
+  useradd --create-home --shell /bin/bash intern
+fi
+usermod --append --groups wheel intern
+cat > /etc/sudoers.d/intern <<'SUDOERS'
+intern ALL=(ALL) NOPASSWD: ALL
+SUDOERS
+chmod 0440 /etc/sudoers.d/intern
 
 systemctl enable --now docker
+systemctl enable --now firewalld
+firewall-cmd --set-default-zone=public
+firewall-cmd --zone=public --set-target=DROP
+firewall-cmd --zone=public --add-port=${app_port}/tcp --permanent
+firewall-cmd --reload
 
-git clone --branch "${git_branch}" \
+rm -rf /opt/devops-challenge
+git clone --depth 1 --branch "${git_branch}" \
   "${git_repo_url}" /opt/devops-challenge
 
 cd /opt/devops-challenge/intern-task-app
@@ -27,7 +39,7 @@ Restart=always
 RestartSec=5
 ExecStartPre=-/usr/bin/docker rm -f intern-task-app
 ExecStart=/usr/bin/docker run --rm --name intern-task-app -p ${app_port}:5000 intern-task-app:local
-ExecStop=/usr/bin/docker stop intern-task-app
+ExecStop=/usr/bin/docker stop --time 10 intern-task-app
 
 [Install]
 WantedBy=multi-user.target
@@ -35,4 +47,3 @@ SERVICE
 
 systemctl daemon-reload
 systemctl enable --now intern-task-app.service
-EOF
