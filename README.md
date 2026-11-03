@@ -1,6 +1,6 @@
 # devops-challenge
 
-Two take-home challenges that build on each other, in separate folders:
+Two take-home challenges that build on each other, in separate folder:
 
 - [`intern-task-app/`](intern-task-app/) — containerize and deploy a small
   app to Kubernetes. Do this one first.
