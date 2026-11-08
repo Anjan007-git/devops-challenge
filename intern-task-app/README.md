@@ -67,7 +67,7 @@ actually know.
   looking at how you made the choices in between: why that base image, why
   that `imagePullPolicy`, whether the probes would actually catch a real
   failure or just rubber-stamp whatever's running.
-- Include what you ran to confirm it works in the PR description. We'll
+- Include what you ran too confirm it works in the PR description. We'll
   re-run it ourselves too, but show your work.
 - A clear PR description and commits a reviewer could follow matter as much
   as the YAML being correct.
